@@ -1,0 +1,103 @@
+version: 1.0.0
+last_updated: '2026-03-04'
+documents:
+- id: BLU-001
+  title: PropManage Pro Architecture Blueprint
+  path: CODEX/20_BLUEPRINTS/BLU-001_PropManageProArchitecture.md
+  type: feature
+  status: DRAFT
+- id: BLU-002
+  title: PropManage Pro Implementation Backlog
+  path: CODEX/20_BLUEPRINTS/BLU-002_PropManageProBacklog.md
+  type: feature
+  status: DRAFT
+- id: DEF-001
+  title: Governance Compliance Gap Analysis
+  path: CODEX/50_DEFECTS/DEF-001_GovernanceComplianceGapAnalysis.md
+  type: reference
+  status: CLOSED
+- id: DEF-002
+  title: Governance Compliance Gap Analysis
+  path: CODEX/50_DEFECTS/DEF-002_GovernanceComplianceGapAnalysis.md
+  type: reference
+  status: APPROVED
+- id: GOV-001
+  title: Documentation Standard
+  path: CODEX/10_GOVERNANCE/GOV-001_DocumentationStandard.md
+  type: reference
+  status: APPROVED
+- id: GOV-002
+  title: Testing Protocol
+  path: CODEX/10_GOVERNANCE/GOV-002_TestingProtocol.md
+  type: reference
+  status: APPROVED
+- id: GOV-003
+  title: Coding Standard
+  path: CODEX/10_GOVERNANCE/GOV-003_CodingStandard.md
+  type: reference
+  status: APPROVED
+- id: GOV-004
+  title: Error Handling Protocol
+  path: CODEX/10_GOVERNANCE/GOV-004_ErrorHandlingProtocol.md
+  type: reference
+  status: APPROVED
+- id: GOV-005
+  title: Agentic Development Lifecycle
+  path: CODEX/10_GOVERNANCE/GOV-005_AgenticDevelopmentLifecycle.md
+  type: reference
+  status: APPROVED
+- id: GOV-006
+  title: Logging Specification
+  path: CODEX/10_GOVERNANCE/GOV-006_LoggingSpecification.md
+  type: reference
+  status: APPROVED
+- id: RES-001
+  title: 'Architecture Analysis: SOTA, Missing Features, & GCP Free Tier Strategy'
+  path: CODEX/70_RESEARCH/RES-001_SOTA_GCP_FreeTier.md
+  type: research
+  status: APPROVED
+- id: RUN-001
+  title: Web Access Guide
+  path: CODEX/30_RUNBOOKS/RUN-001_WebAccessGuide.md
+  type: runbook
+  status: APPROVED
+- id: SPR-001
+  title: 'Sprint 1: Core Foundation'
+  path: CODEX/40_SPRINTS/SPR-001_Sprint1_Foundation.md
+  type: sprint
+  status: CLOSED
+- id: SPR-001.5
+  title: 'Sprint 1.5: Testing Protocol Initialization'
+  path: CODEX/40_SPRINTS/SPR-001_5_TestingProtocol.md
+  type: sprint
+  status: CLOSED
+- id: SPR-001.6
+  title: 'Sprint 1.6: CODEX Logging Governance Implementation'
+  path: CODEX/40_SPRINTS/SPR-001_6_LoggingGovernance.md
+  type: sprint
+  status: CLOSED
+- id: SPR-001.7
+  title: 'Sprint 1.7: CODEX Error Handling Governance Implementation'
+  path: CODEX/40_SPRINTS/SPR-001_7_ErrorGovernance.md
+  type: sprint
+  status: CLOSED
+- id: SPR-002
+  title: 'Sprint 2: Firebase Foundation and Data Models'
+  path: CODEX/40_SPRINTS/SPR-002_Sprint2_Firebase.md
+  type: sprint
+  status: CLOSED
+- id: SPR-003
+  title: 'Sprint 3: Firebase Auth Context & UI Dashboard Backbone'
+  path: CODEX/40_SPRINTS/SPR-003_Auth_Dashboard.md
+  type: sprint
+  status: APPROVED
+- id: SPR-004
+  title: 'Sprint 4: Data Security, Cloud Aggregation, and Media Compression'
+  path: CODEX/40_SPRINTS/SPR-004_Scale_And_Security.md
+  type: sprint
+  status: APPROVED
+- id: VER-001
+  title: PropManage Pro Traceability Matrix
+  path: CODEX/40_VERIFICATION/VER-001_TraceabilityMatrix.md
+  type: verification
+  status: DRAFT

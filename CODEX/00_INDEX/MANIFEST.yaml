@@ -1,0 +1,258 @@
+# ============================================================================
+# MANIFEST.yaml — Machine-Readable Document Registry
+# ============================================================================
+#
+# PURPOSE: This is the agent's map. An AI agent given any task can read this
+# single file, filter by tags/status/type/agents field, and locate exactly the
+# docs it needs — no directory crawling required.
+#
+# USAGE (agent):
+#   1. Parse this file
+#   2. Filter documents by relevant tags, type, or agents field
+#   3. Read only the docs that match your task
+#
+# USAGE (human with yq):
+#   yq '.documents[] | select(.tags[] == "testing")' MANIFEST.yaml
+#   yq '.documents[] | select(.status == "APPROVED")' MANIFEST.yaml
+#   yq '.documents[] | select(.agents[] == "coder")' MANIFEST.yaml
+#
+# MAINTENANCE: Update this file whenever a doc is created, moved, or archived.
+#   Run: CODEX/_scripts/manifest-gen.sh (when available) to auto-regenerate.
+# ============================================================================
+
+schema_version: "1.0.0"
+project: "prop-manage-pro"
+generated: "2026-03-04"
+
+# ── Area Definitions ──────────────────────────────────────────────────────────
+areas:
+  - number: 10
+    name: GOVERNANCE
+    slug: governance
+    description: "Standards, protocols, coding rules, architecture decisions"
+    category_codes: [GOV, ADR]
+
+  - number: 20
+    name: BLUEPRINTS
+    slug: blueprints
+    description: "Component specifications, system designs, API contracts"
+    category_codes: [BLU, API]
+
+  - number: 30
+    name: RUNBOOKS
+    slug: runbooks
+    description: "Operational how-to guides, deployment, workflows"
+    category_codes: [RUN, DEP]
+
+  - number: 40
+    name: VERIFICATION
+    slug: verification
+    description: "Test specs, QA standards, validation reports"
+    category_codes: [VER, QA]
+
+  - number: 50
+    name: DEFECTS
+    slug: defects
+    description: "Bug reports, root cause analysis, incident forensics"
+    category_codes: [DEF, RCA]
+
+  - number: 60
+    name: EVOLUTION
+    slug: evolution
+    description: "Feature specs, enhancement proposals, roadmaps"
+    category_codes: [EVO, RFC]
+
+  - number: 70
+    name: RESEARCH
+    slug: research
+    description: "Whitepapers, investigations, POCs, literature reviews"
+    category_codes: [RES, POC]
+
+  - number: 90
+    name: ARCHIVE
+    slug: archive
+    description: "Deprecated and completed docs"
+    category_codes: [ARC]
+
+# ── Document Registry ─────────────────────────────────────────────────────────
+documents:
+
+  - id: GOV-001
+    path: CODEX/10_GOVERNANCE/GOV-001_DocumentationStandard.md
+    title: "Documentation Standard"
+    type: reference
+    status: APPROVED
+    tags: [documentation, standards, naming, frontmatter, templates, governance]
+    agents: [all]
+    summary: >
+      NASA/JPL-grade documentation standard for all projects. All docs must use YAML frontmatter, BLUF-first writing, and follow the Indexed Decimal folder structure. Enforces change control (NPR 7150.2D), peer review gates, requirements traceability (DO-178C §6.4), and formal retention/archival policies. Documentation is a first-class deliverable — not an afterthought.
+
+  - id: GOV-002
+    path: CODEX/10_GOVERNANCE/GOV-002_TestingProtocol.md
+    title: "Testing Protocol"
+    type: reference
+    status: APPROVED
+    tags: [testing, verification, governance, standards, quality]
+    agents: [all]
+    summary: >
+      NASA/JPL-grade testing protocol defining 14 test categories, bidirectional requirements traceability, assertion density mandates, MC/DC coverage, and forensic artifact requirements. An agent reading this document knows exactly what to build, what tools to use, and what "done" looks like.
+
+  - id: GOV-003
+    path: CODEX/10_GOVERNANCE/GOV-003_CodingStandard.md
+    title: "Coding Standard"
+    type: reference
+    status: APPROVED
+    tags: [coding, standards, governance, quality, safety]
+    agents: [all]
+    summary: >
+      NASA/JPL-grade polyglot coding standard for agent-written code. Covers Python, C/C++, and React/TypeScript. Enforces NASA Power of 10, MISRA C:2025, DO-178C code review mandates, dead code prohibition, boundary condition requirements, and the Disaster-Readability Principle. While 99% of this code will never be read by humans, it MUST be written so that in a disaster, a human engineer can understand any function in 30 seconds.
+
+  - id: GOV-004
+    path: CODEX/10_GOVERNANCE/GOV-004_ErrorHandlingProtocol.md
+    title: "Error Handling Protocol"
+    type: reference
+    status: APPROVED
+    tags: [coding, standards, governance, quality, safety]
+    agents: [all]
+    summary: >
+      NASA/JPL-grade error handling protocol. Zero-dark-failure doctrine: no error happens silently, no application crashes without a trace. Every exception is caught, classified by severity level (DO-178C DAL mapping), logged with full stack trace and context, and either recovered from or escalated. Includes FMEA requirements, crash artifacts, circuit breakers, correlation IDs, and mandatory post-incident review.
+
+  - id: GOV-005
+    path: CODEX/10_GOVERNANCE/GOV-005_AgenticDevelopmentLifecycle.md
+    title: "Agentic Development Lifecycle"
+    type: reference
+    status: APPROVED
+    tags: [governance, standards, project-management, workflow]
+    agents: [all]
+    summary: >
+      Project lifecycle protocol for human-Architect + AI-agent development. Replaces traditional Agile with scope-bounded sprints, emergent work items, one-agent-per-branch execution, natural checkpoints, and human-in-the-loop merge/deploy. The only human in the loop is the Architect. Everything else is agentic.
+
+  - id: GOV-006
+    path: CODEX/10_GOVERNANCE/GOV-006_LoggingSpecification.md
+    title: "Logging Specification"
+    type: reference
+    status: APPROVED
+    tags: [coding, standards, governance, quality, safety]
+    agents: [all]
+    summary: >
+      NASA/JPL-grade logging specification. Every application event is a structured, queryable record — not a text line. Logs go to databases or flat files per the application spec. Trace logs are mandatory for agent-readable execution reconstruction. Covers Python, C/C++, and TypeScript with exhaustive log level definitions, retention policies, correlation IDs, and forensic query patterns. No `print()`. No unstructured text. No silent execution.
+
+  - id: BLU-001
+    path: CODEX/20_BLUEPRINTS/BLU-001_PropManageProArchitecture.md
+    title: "PropManage Pro Architecture Blueprint"
+    type: feature
+    status: DRAFT
+    tags: [architecture, feature, api, schema, integration]
+    agents: [all]
+    summary: >
+      This document outlines the system architecture and core feature specifications for PropManage Pro, an enterprise-grade property management platform designed for the Winston-Salem, NC market. It details the serverless React/Firebase stack, key functional modules, security considerations, and future roadmap integration points.
+
+  - id: BLU-002
+    path: CODEX/20_BLUEPRINTS/BLU-002_PropManageProBacklog.md
+    title: "PropManage Pro Implementation Backlog"
+    type: feature
+    status: DRAFT
+    tags: [architecture, feature, project-management]
+    agents: [coder]
+    summary: >
+      This document contains the 7-task backlog generated by the DarkGravity Architecture swarm, decomposing the PropManage Pro blueprint (BLU-001) into atomic, executable engineering tasks.
+
+  - id: SPR-001.5
+    path: CODEX/40_SPRINTS/SPR-001_5_TestingProtocol.md
+    title: "Sprint 1.5: Testing Protocol Initialization"
+    type: sprint
+    status: CLOSED
+    tags: [sprint, testing, architecture, verification, governance]
+    agents: [coder]
+    summary: >
+      Sprint 1.5 remediated the lack of testing architecture. It implemented Vitest, React Testing Library, and Playwright to satisfy Tiers 2, 4, 6, and 9 of the GOV-002 Testing Protocol, fully establishing the required forensic artifacts directory structure.
+
+  - id: SPR-001.6
+    path: CODEX/40_SPRINTS/SPR-001_6_LoggingGovernance.md
+    title: "Sprint 1.6: CODEX Logging Governance Implementation"
+    type: sprint
+    status: CLOSED
+    tags: [sprint, logging, architecture, governance]
+    agents: [coder]
+    summary: >
+      Sprint 1.6 implemented the strict NASA-grade structured logging constraints defined in GOV-006. The standard library `console.log` is permanently banned, and execution flow tracing (`withTrace`) has been successfully wired into the Next.js runtime using Pino.
+
+  - id: SPR-001.7
+    path: CODEX/40_SPRINTS/SPR-001_7_ErrorGovernance.md
+    title: "Sprint 1.7: CODEX Error Handling Governance Implementation"
+    type: sprint
+    status: CLOSED
+    tags: [sprint, error-handling, architecture, governance]
+    agents: [coder]
+    summary: >
+      Sprint 1.7 implemented the NASA-grade "zero-dark-failure" GOV-004 Error Handling Protocol. A centralized `ApplicationError` taxonomy was integrated with the Pino logger, and global Next.js UI caching boundaries (`error.tsx`, `global-error.tsx`) were established to prevent silent client crashes.
+
+  - id: SPR-001
+    path: CODEX/40_SPRINTS/SPR-001_Sprint1_Foundation.md
+    title: "Sprint 1: Core Foundation"
+    type: sprint
+    status: CLOSED
+    tags: [sprint, initialization, frontend, architecture]
+    agents: [coder]
+    summary: >
+      Sprint 1 successfully executed Task 1 from `BLU-002`. The PropManage Pro environment is now initialized with Next.js 15 (App Router), shadcn/ui components, and TanStack Query optimized for the Firebase Free Tier.
+
+  - id: SPR-002
+    path: CODEX/40_SPRINTS/SPR-002_Sprint2_Firebase.md
+    title: "Sprint 2: Firebase Foundation and Data Models"
+    type: sprint
+    status: CLOSED
+    tags: [sprint, backend, database, architecture]
+    agents: [coder]
+    summary: >
+      Sprint 2 successfully deployed the Firebase Client SDK into the Next.js runtime, established strict TypeScript schemas mapping to NoSQL collections (`User`, `Property`, `Tenant`, `Ledger`), and implemented a fully-tested, GOV-004 compliant CRUD API layer for properties.
+
+  - id: SPR-003
+    path: CODEX/40_SPRINTS/SPR-003_Auth_Dashboard.md
+    title: "Sprint 3: Firebase Auth Context & UI Dashboard Backbone"
+    type: sprint
+    status: APPROVED
+    tags: [sprint, auth, react-context, shadcn, tailwind, ui]
+    agents: [all]
+    summary: >
+      Sprint 3 successfully implemented the global Firebase Authentication React Context, strict client-side Protected Route bounds, and a highly aesthetic dynamic KPI Dashboard component to act as the primary operational UI, achieving 100% Vitest line coverage.
+
+  - id: SPR-004
+    path: CODEX/40_SPRINTS/SPR-004_Scale_And_Security.md
+    title: "Sprint 4: Data Security, Cloud Aggregation, and Media Compression"
+    type: sprint
+    status: APPROVED
+    tags: [sprint, security, firestore, cloud-functions, architecture]
+    agents: [all]
+    summary: >
+      Sprint 4 secured the Firebase perimeter with strict `owner_uid` multi-tenancy rules, implemented Node.js Cloud Functions to aggregate dashboard KPIs, drastically reduced ingress costs via HTML5 Canvas image compression, and scaffolded the premium Vendor and Work Order next-gen enterprise UI boundaries.
+
+  - id: VER-001
+    path: CODEX/40_VERIFICATION/VER-001_TraceabilityMatrix.md
+    title: "PropManage Pro Traceability Matrix"
+    type: verification
+    status: DRAFT
+    tags: [testing, verification, tracing, metrics]
+    agents: [all]
+    summary: >
+      This matrix maps all architectural requirements (BLU) to their executing test functions to satisfy the DO-178C bidirectional traceability mandates defined in GOV-002 §19.
+
+  - id: DEF-001
+    path: CODEX/50_DEFECTS/DEF-001_GovernanceComplianceGapAnalysis.md
+    title: "Governance Compliance Gap Analysis"
+    type: reference
+    status: CLOSED
+    tags: [governance, compliance, audit, defects]
+    agents: [all]
+    summary: >
+      A comprehensive audit of the PropManage Pro codebase against the CODEX governance standards (GOV-001 through GOV-006) reveals multiple compliance drifts primarily concerning static analysis limits, commit message ontology, and test coverage for UI error boundaries. Immediate remediation is required to maintain JPL-grade code safety.
+
+  - id: RES-001
+    path: CODEX/70_RESEARCH/RES-001_SOTA_GCP_FreeTier.md
+    title: "Architecture Analysis: SOTA, Missing Features, & GCP Free Tier Strategy"
+    type: research
+    status: APPROVED
+    tags: [architecture, research, performance, deployment, integration]
+    agents: [all]
+    summary: >
+      This analysis evaluates the BLU-001 architecture and BLU-002 backlog. It identifies State-of-the-Art (SOTA) stack upgrades, critical missing enterprise features for property management, and outlines a specific engineering strategy to maximize the Google Cloud/Firebase Free Tier for a production deployment.

@@ -1,0 +1,45 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Logs
+*.log
+
+# Temp
+tmp/
+.tmp/
+gcp-key.json
+
+# Firebase
+.firebase/
+sdkconfig.txt
+web_apps.json
+
+# Build artifacts
+*.tsbuildinfo
+build_trace.log
+src/out/
+
+# Test artifacts (generated)
+src/tests/artifacts/unit/report.json
+src/test-results/
