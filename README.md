@@ -2,6 +2,14 @@
 
 > Enterprise-grade property management platform built with Next.js 16, React 19, and Firebase — engineered to NASA/JPL coding standards.
 
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-16.1.6-000000?logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4?logo=tailwindcss&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-Hosting-FFCA28?logo=firebase&logoColor=black)
+![Vitest](https://img.shields.io/badge/Vitest-71_tests-6E9F18?logo=vitest&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 ![Dashboard Preview](docs/dashboard_preview.png)
 
 **🌐 Live Demo:** [mylab-481117.web.app](https://mylab-481117.web.app)
