@@ -8,11 +8,11 @@ agents: [all]
 tags: [coding, standards, governance, quality, safety]
 related: [GOV-001, GOV-002]
 created: 2026-03-04
-updated: 2026-03-04
-version: 2.0.0
+updated: 2026-03-05
+version: 3.0.0
 ---
 
-> **BLUF:** NASA/JPL-grade polyglot coding standard for agent-written code. Covers Python, C/C++, and React/TypeScript. Enforces NASA Power of 10, MISRA C:2025, DO-178C code review mandates, dead code prohibition, boundary condition requirements, and the Disaster-Readability Principle. While 99% of this code will never be read by humans, it MUST be written so that in a disaster, a human engineer can understand any function in 30 seconds.
+> **BLUF:** NASA/JPL-grade polyglot coding standard for agent-written code. Covers Python, C/C++, and React/TypeScript. Enforces NASA Power of 10, MISRA C:2025, DO-178C code review mandates, dead code prohibition, boundary condition requirements, and the Disaster-Readability Principle. The **reference exemplar** for React/TypeScript components is `src/components/dashboard/KPICard.tsx` — all component code must match or exceed its patterns. While 99% of this code will never be read by humans, it MUST be written so that in a disaster, a human engineer can understand any function in 30 seconds.
 
 # Coding Standard: The Engineering Discipline
 
@@ -414,36 +414,144 @@ int motor_set_velocity(double velocity_mps);
 - **Props use `interface`** — state/hooks use `type`
 - **One component per file**
 - **Early returns** for loading/error states before the main render
+- **Semantic HTML elements** — use `<article>`, `<section>`, `<nav>` over generic `<div>` for top-level wrappers
+- **Design-decision comments** — explain *why*, not *what*, especially on guard clauses and fallback values
 
 ```tsx
 /**
- * Displays the current system status with health indicators.
- * 
- * Used by: Dashboard, AdminPanel
- * 
- * DISASTER NOTE: If this component fails to render, the operator
- * loses visibility into system health. Fail-safe: raw JSON fallback.
+ * Renders a single dashboard metric card with optional trend indicator.
+ *
+ * **Design decisions:**
+ * - Guard clause exits early for `loading` state (GOV-003 §7.1).
+ * - Null-safe fallback for `value` prevents blank cards in edge cases.
+ * - Semantic `<article>` with `aria-label` enables screen-reader navigation.
+ * - `data-testid` attributes allow deterministic test selectors.
+ *
+ * @example
+ * ```tsx
+ * <KPICard
+ *     title="Monthly Revenue"
+ *     value="$124,500"
+ *     icon={DollarSign}
+ *     trend={{ value: 8.1, label: 'vs last month' }}
+ * />
+ * ```
  */
-interface StatusPanelProps {
-  /** Current system status object */
-  status: SystemStatus;
-  /** Called when user requests a manual refresh */
-  onRefresh: () => void;
-}
+export default function KPICard({ title, value, icon: Icon, trend, loading = false }: KPICardProps) {
+  /* Guard: Loading state (GOV-003 §7.1 — early return) */
+  if (loading) {
+    return <div role="status" aria-label={`Loading ${title}`} data-testid="kpi-skeleton">...</div>
+  }
 
-export function StatusPanel({ status, onRefresh }: StatusPanelProps) {
-  if (!status) return <ErrorFallback message="Status unavailable" />;
+  /** Defensive fallback: prevents blank cards if upstream data is missing. */
+  const safeValue = value ?? MISSING_VALUE_PLACEHOLDER
 
   return (
-    <div className="status-panel">
-      <HealthIndicator level={status.health} />
-      <button onClick={onRefresh}>Refresh</button>
-    </div>
-  );
+    <article aria-label={`${title}: ${safeValue}`} data-testid={`kpi-card-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+      ...
+    </article>
+  )
 }
 ```
 
-### 8.3 Naming Conventions
+### 8.3 Accessibility (WCAG 2.1 AA)
+
+All UI components **MUST** include accessibility attributes:
+
+| Requirement | Implementation | When Required |
+|:------------|:---------------|:--------------|
+| **`aria-label`** on containers | Describe the widget's content for screen readers | Every interactive or data-display component |
+| **`aria-hidden="true"`** on decorative elements | Icons, gradient accents, visual flourishes | Every non-semantic visual element |
+| **`role="status"`** on loading skeletons | Announce loading state to assistive technology | Every loading/skeleton state |
+| **Semantic HTML** | `<article>` for cards, `<nav>` for navigation, `<section>` for page regions | Always prefer over `<div>` |
+| **Color contrast** | All text meets 4.5:1 contrast ratio | Every text element |
+
+```tsx
+// ✅ GOOD — Accessible card with semantic HTML and ARIA
+<article aria-label={`${title}: ${safeValue}`}>
+    <div aria-hidden="true" className="decorative-gradient" />
+    <Icon aria-hidden="true" />
+</article>
+
+// ❌ BAD — Generic div, no ARIA, icons announced by screen readers
+<div>
+    <Icon />
+</div>
+```
+
+### 8.4 Testability (`data-testid` Attributes)
+
+All components **MUST** include `data-testid` attributes for deterministic test selectors:
+
+| Rule | Rationale |
+|:-----|:----------|
+| **Every rendered component root** gets a `data-testid` | Tests must not rely on CSS classes or text content |
+| **Dynamic IDs** use kebab-case derived from props | `data-testid={\`kpi-card-${title.toLowerCase().replace(/\s+/g, '-')}\`}` |
+| **Conditional sub-elements** get their own `data-testid` | `data-testid="kpi-trend"`, `data-testid="kpi-skeleton"` |
+| **Never use `data-testid` for styling** | Test hooks are invisible to users |
+
+### 8.5 Constants & Type Safety
+
+All constant maps and enumerations **MUST** use `as const` assertions for maximum type narrowing:
+
+```tsx
+// ✅ GOOD — Type-safe, auto-complete friendly, immutable
+const TREND_ARROW = { up: '↑', down: '↓' } as const
+const TREND_COLORS = {
+    positive: 'text-emerald-400',
+    negative: 'text-rose-400',
+} as const
+
+// ❌ BAD — Mutable, widened to `string`, no auto-complete
+const TREND_ARROW = { up: '↑', down: '↓' }
+```
+
+**Sub-interfaces**: When a prop contains a composite shape (e.g., `trend: { value, label }`), extract it into a **named interface** with per-field JSDoc:
+
+```tsx
+// ✅ GOOD — Self-documenting, reusable, hover-documented in IDE
+interface TrendData {
+    /** Percentage change vs previous period. Positive = green, negative = red. */
+    value: number
+    /** Contextual label displayed after the percentage (e.g., "vs last month"). */
+    label: string
+}
+
+export interface KPICardProps {
+    trend?: TrendData
+}
+```
+
+### 8.6 JSDoc with `@example` Blocks
+
+All exported components **MUST** include a JSDoc block with:
+
+| Field | Required | Purpose |
+|:------|:--------:|:--------|
+| Summary line | ✅ | One sentence describing what the component renders |
+| `**Design decisions:**` | ✅ | Bullet list of non-obvious architectural choices |
+| `@example` block | ✅ | Copy-pasteable usage snippet |
+| `Used by:` / `Related:` | ✅ | Consumer and standard references |
+
+### 8.7 CSS Class Formatting
+
+Tailwind utility classes **MUST** be split across multiple lines when they exceed 80 characters, grouped by concern:
+
+```tsx
+// ✅ GOOD — Grouped by concern: layout → color → animation
+<article
+    className="group relative overflow-hidden rounded-xl border border-zinc-800
+               bg-zinc-950/40 p-6 shadow-sm shadow-black/20 backdrop-blur-xl
+               transition-all duration-300
+               hover:-translate-y-1 hover:border-zinc-700
+               hover:bg-zinc-900/60 hover:shadow-md hover:shadow-white/5"
+>
+
+// ❌ BAD — Single unreadable line
+<article className="group relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950/40 p-6 shadow-sm shadow-black/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-zinc-700 hover:bg-zinc-900/60 hover:shadow-md hover:shadow-white/5">
+```
+
+### 8.8 Naming Conventions
 
 | Element | Convention | Example |
 |:--------|:-----------|:--------|
@@ -452,9 +560,10 @@ export function StatusPanel({ status, onRefresh }: StatusPanelProps) {
 | Event handlers | `handleVerb` or `onVerb` | `handleSubmit`, `onClose` |
 | Boolean props | `is/has/should` prefix | `isLoading`, `hasError` |
 | Constants | `UPPER_SNAKE` | `MAX_RETRIES`, `API_URL` |
+| Constant maps | `UPPER_SNAKE` + `as const` | `TREND_COLORS`, `STATUS_STYLES` |
 | Utility files | `kebab-case.ts` | `date-utils.ts`, `api-client.ts` |
 
-### 8.4 Tools & Enforcement
+### 8.9 Tools & Enforcement
 
 | Tool | Purpose | CI Gate |
 |:-----|:--------|:--------|
@@ -625,7 +734,9 @@ Before submitting code in **any language**:
 - [ ] Cyclomatic complexity ≤10 per function
 - [ ] Nesting depth ≤4 levels
 - [ ] All public functions have docstrings/JSDoc/Doxygen comments
+- [ ] All exported React components include `@example` JSDoc block (§8.6)
 - [ ] All magic numbers replaced with named constants
+- [ ] All constant maps use `as const` assertion (§8.5)
 - [ ] All return values checked or explicitly ignored with comment
 - [ ] Guard clauses handle error paths first
 - [ ] ≥2 assertions per non-trivial function
@@ -636,6 +747,10 @@ Before submitting code in **any language**:
 - [ ] Static analysis profile enabled and passing (§12)
 - [ ] Code reviewed per §10 (independent review for safety-critical)
 - [ ] A human can understand any function in 30 seconds
+- [ ] **React/TS only:** Semantic HTML elements used (§8.3)
+- [ ] **React/TS only:** ARIA attributes present on all components (§8.3)
+- [ ] **React/TS only:** `data-testid` attributes on all component roots and key sub-elements (§8.4)
+- [ ] **React/TS only:** Multi-line className formatting for long utility strings (§8.7)
 
 ---
 
